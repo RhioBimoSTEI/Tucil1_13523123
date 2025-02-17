@@ -44,17 +44,3 @@ Follow these steps to get the application running on your local machine:
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-## Contributor
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="20.28%"><a href="https://github.com/RhioBimoSTEI"><img style="border-radius: 15%" src="https://avatars.githubusercontent.com/u/163750851?v=4" alt="Rhio Bimo<br /><sub><b>Rhio Bimo P S. <br /> 13523123 </b></sub></a><br /></td>
-    </tr>
-  </tbody>
-</table>
-
----
