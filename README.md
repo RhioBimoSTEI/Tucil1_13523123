@@ -52,7 +52,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="20.28%"><a href="https://github.com/Cola1000"><img style="border-radius: 15%" src="https://avatars.githubusercontent.com/u/143616767?v=4" width="115px;" alt="Cola1000"/><br /><sub><b>Rhio Bimo P S. <br /> 13523123 </b></sub></a><br /></td>
+      <td align="center" valign="top" width="20.28%"><a href="https://github.com/RhioBimoSTEI"><img style="border-radius: 15%" src="https://avatars.githubusercontent.com/u/163750851?v=4" alt="Rhio Bimo<br /><sub><b>Rhio Bimo P S. <br /> 13523123 </b></sub></a><br /></td>
     </tr>
   </tbody>
 </table>
