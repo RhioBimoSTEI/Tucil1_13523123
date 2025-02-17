@@ -14,7 +14,6 @@
 - [About the Project](#about-the-project)
 - [Installation](#installation)
 - [License](#license)
-- [Contributor](#contributor)
 
 ---
 
