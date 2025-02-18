@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String inputFile = "test/test.txt";
+        String inputFile = "test/input.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             // Line 1: N M P
