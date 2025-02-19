@@ -8,7 +8,10 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String inputFile = "test/default.txt";
+        Scanner myObj = new Scanner(System.in);
+        System.out.println("Enter username");
+        String fileName = myObj.nextLine(); // temp: Read user input
+        String inputFile = "test/"+fileName+".txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             // Line 1: N M P
@@ -66,26 +69,30 @@ public class Main {
             
             // Solver:
             long startTime = System.nanoTime();
-
+            
             DefaultSolver solver = new DefaultSolver(board, pieces);
             if (solver.solve()) {
+                if (!board.isComplete()) {
+                    System.out.println("Error: Board has empty spaces");
+                    return;
+                }
                 board.print();
                 System.out.println("\nPuzzle Solved");
+                System.out.println("Placing Steps:" + DefaultSolver.Placing_steps); //Print Placing Steps that Solver use
+                System.out.println("Backtrack Times: " + DefaultSolver.Backtrack_steps); //Print How many times Solver backtrack
             } else {
                 System.out.println("No Solution Found");
             }
             
-            String estimatedTime = ((System.nanoTime() - startTime)/1000000) + "ms";
+            String estimatedTime = ((System.nanoTime() - startTime)/1000000) + " ms";
 
-            System.out.println("Time taken to solve:" + estimatedTime); //Print estimated time taken for brute force
-            System.out.println("Placing Steps:" + DefaultSolver.Placing_steps); //Print Placing Steps that Solver use
-            System.out.println("Backtrack Times: " + DefaultSolver.Backtrack_steps); //Print How many times Solver backtrack
+            System.out.println("Waktu pencarian: " + estimatedTime); //Print estimated time taken for brute force
 
             DefaultSolver.Placing_steps = 0;
             DefaultSolver.Backtrack_steps = 0;
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
     

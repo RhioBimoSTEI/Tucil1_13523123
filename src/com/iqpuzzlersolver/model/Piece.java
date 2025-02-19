@@ -18,12 +18,8 @@ public class Piece {
     
     public boolean[][] getShape() {return shape;}
     
-    /** Note:
-     1. setiap piece the character is sama
-     2. kalau '\n' cek bawah apa karakternya sama
-     */
     public static Piece fromString(String s) {
-        String[] lines = s.trim().split("\n");
+        String[] lines = s.split("\n");
         int rows = lines.length;
         int cols = 0;
         // Cek panjang column max si piece
@@ -38,10 +34,18 @@ public class Piece {
             String line = lines[i];
             for (int j = 0; j < cols; j++) {
                 if (j < line.length() && line.charAt(j) != ' ') { // Kalau space tidak kosong
-                    shape[i][j] = true;
+                    // If id is not set, assign it and validate it
                     if (id == ' ') {
-                        id = line.charAt(j); // Masukan karakter Piece di (X,Y)
+                        id = line.charAt(j);
+                        if (!Character.isUpperCase(id) || id < 'A' || id > 'Z') {
+                            throw new IllegalArgumentException("Error: Piece ID is not valid");
+                        }
+                    } else {
+                        if (line.charAt(j) != id) {
+                            throw new IllegalArgumentException("Error: Piece ID is not valid");
+                        }
                     }
+                    shape[i][j] = true;
                 } else {
                     shape[i][j] = false;
                 }
@@ -78,10 +82,9 @@ public class Piece {
                 transformations.add(mirrored); // Tambah piece tercermin
                 seen.add(keyMirrored);
             }
-    }
+        }
     
-    return transformations;
-
+        return transformations;
     }
 
     // rotasi 90 derajat searah jarum jam

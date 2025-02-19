@@ -1,4 +1,4 @@
-8 4 8
+4 8 8
 DEFAULT
 L
 L
@@ -17,5 +17,5 @@ BB
 T
 TT
 M
-GGGG
  G
+GGGG

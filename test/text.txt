@@ -1,0 +1,23 @@
+4 10 8
+DEFAULT
+N  N
+NN N
+N NN
+N  N
+ A
+A A
+AAA
+A A
+H H
+HHH
+HHH
+H H
+BB
+ B
+B
+BB
+C C
+ C
+D
+E
+F
