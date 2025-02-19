@@ -8,7 +8,7 @@ public class DefaultSolver {
     private Board board;
     private List<Piece> pieces;
     
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = false; //Ganti jadi true kala mau lihat steps setiap program place/backtrack piece di board
 
     public DefaultSolver(Board board, List<Piece> pieces) {
         this.board = board;
@@ -19,6 +19,9 @@ public class DefaultSolver {
         return solveHelper(0);
     }
     
+    public static long Placing_steps = 0;
+    public static long Backtrack_steps = 0;
+
     // Recursive untuk brute force
     private boolean solveHelper(int index) {
         if (index == pieces.size()) { // Jika penempatan berhasil
@@ -30,11 +33,13 @@ public class DefaultSolver {
         // Ambil semua kemungkinan rotasi (termasuk cermin) dari piece
         List<boolean[][]> rotations = current.getRotations();
         
+
         // Lakukan semua kemungkinan rotasi
         for (boolean[][] shape : rotations) {
             int shapeRows = shape.length;
             int shapeCols = shape[0].length;
             
+
             // Untuk rotasi sekarang, coba semua kemungkinan penempatan
             for (int i = 0; i <= board.getRows() - shapeRows; i++) {
                 for (int j = 0; j <= board.getCols() - shapeCols; j++) {
@@ -47,6 +52,7 @@ public class DefaultSolver {
                             System.out.println("Placed piece " + current.getId() + " at (" + i + ", " + j + ")");
                             System.out.println("----------------------");
                         }
+                        Placing_steps++;
                         
                         // Aww dangit, again!
                         if (solveHelper(index + 1)) {
@@ -59,7 +65,9 @@ public class DefaultSolver {
                             System.out.println("Backtracked piece " + current.getId() + " from (" + i + ", " + j + ")");
                             System.out.println("----------------------");
                         }
+                        Backtrack_steps++;
                     }
+                    
                 }
             }
         }

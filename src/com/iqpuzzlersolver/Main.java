@@ -65,6 +65,8 @@ public class Main {
             }
             
             // Solver:
+            long startTime = System.nanoTime();
+
             DefaultSolver solver = new DefaultSolver(board, pieces);
             if (solver.solve()) {
                 board.print();
@@ -73,6 +75,15 @@ public class Main {
                 System.out.println("No Solution Found");
             }
             
+            String estimatedTime = ((System.nanoTime() - startTime)/1000000) + "ms";
+
+            System.out.println("Time taken to solve:" + estimatedTime); //Print estimated time taken for brute force
+            System.out.println("Placing Steps:" + DefaultSolver.Placing_steps); //Print Placing Steps that Solver use
+            System.out.println("Backtrack Times: " + DefaultSolver.Backtrack_steps); //Print How many times Solver backtrack
+
+            DefaultSolver.Placing_steps = 0;
+            DefaultSolver.Backtrack_steps = 0;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
