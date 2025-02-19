@@ -8,7 +8,7 @@ public class DefaultSolver {
     private Board board;
     private List<Piece> pieces;
     
-    private static final boolean DEBUG = false; //Ganti jadi true kala mau lihat steps setiap program place/backtrack piece di board
+    public static boolean DEBUG = false; //Ganti jadi true kala mau lihat steps setiap program place/backtrack piece di board
 
     public DefaultSolver(Board board, List<Piece> pieces) {
         this.board = board;
