@@ -77,7 +77,7 @@ public class Board {
     public void print() {
         Map<Character, String> colorMap = new HashMap<>();
         // kolor
-        String[] colors = { ""
+        String[] colors = { "\033[0;30m"
             // "\u001B[31m", // Red
             // "\u001B[32m", // Green
             // "\u001B[33m", // Yellow
@@ -102,7 +102,7 @@ public class Board {
                         colorIndex++;
                     }
                     // Print the cell in its designated color.
-                    System.out.print(colorMap.get(cell) + cell + "\u001B[0m");
+                    System.out.print( cell );
                 } else {
                     System.out.print(cell);
                 }

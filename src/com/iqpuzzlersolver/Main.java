@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String inputFile = "test/test.txt";
+        String inputFile = "test/default.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             // Line 1: N M P
@@ -60,7 +60,8 @@ public class Main {
             }
             
             if (pieces.size() != expectedPieceCount) {
-                System.out.println("Warning: Expected " + expectedPieceCount + " pieces, but found " + pieces.size());
+                System.out.println("Program Exitted: Expected " + expectedPieceCount + " pieces, but found " + pieces.size());
+                return;
             }
             
             // Solver:

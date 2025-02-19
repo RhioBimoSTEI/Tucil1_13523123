@@ -1,6 +1,6 @@
 3 3 2
 DEFAULT
 AAA
-A A
+A B
 AAA
-B
+#

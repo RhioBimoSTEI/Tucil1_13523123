@@ -1,4 +1,8 @@
 This is My To-Do List:
-1. Make a check on final "Submitted Board"
+1. Make a check on final "Submitted Board" (Board.jav)
 2. Further Testing
-3. Fix printing
+3. Fix printing (Board.jav)
+4. Kalau di config ganti karakter (Piece.jav)
+5. Awal whitespace (Piece.jav)
+6. ID Piece harus valid (Main.jav/Piece.jav)
+7. Print Kasus yang ditinjau (tiap kali backtrack/naro(idk)) (DefaultSolver.jav)
