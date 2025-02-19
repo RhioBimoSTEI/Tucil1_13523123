@@ -127,4 +127,9 @@ public class Board {
         }
         return true;
     }
+
+    public char[][] getGrid() { // for GUI
+        return grid;
+    }
+    
 }
