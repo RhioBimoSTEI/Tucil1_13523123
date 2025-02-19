@@ -1,5 +1,6 @@
 3 3 3
 DEFAULT
 AAA
-BBB
-CCC
+A A
+AAA
+C

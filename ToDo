@@ -1,8 +1,4 @@
 This is My To-Do List:
-1. Fix the damn Solver or Something
-    - Print How the puzzle is solving but don't print "Puzzle Solved!" Every-time a puzzle is being placed
-    - Only give warning about expected puzzle pieces when all the pieces is already placed/scanned(?)
-    - Make the Puzzle Piece's letter correspond with each letters of the pieces
-    - Get Rid of the Warning
-    - Only Prints Out "No Solution Found" at the end of brute-forcing
-2. Color Code the Output (if not GUI yet)
+1. Make a check on final "Submitted Board"
+2. Further Testing
+3. Fix printing

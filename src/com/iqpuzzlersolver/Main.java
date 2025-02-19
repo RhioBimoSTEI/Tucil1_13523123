@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String inputFile = "test/input.txt";
+        String inputFile = "test/test.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             // Line 1: N M P
@@ -20,9 +20,9 @@ public class Main {
             String[] tokens = line.trim().split("\\s+");
             int rows = Integer.parseInt(tokens[0]);
             int cols = Integer.parseInt(tokens[1]);
-            int pieceCount = Integer.parseInt(tokens[2]);
+            int expectedPieceCount = Integer.parseInt(tokens[2]);
             
-            // Create board
+            // Buat board
             Board board = new Board(rows, cols);
             
             // Line 2: Puzzle type (S)
@@ -36,49 +36,46 @@ public class Main {
             List<Piece> pieces = new ArrayList<>();
             char currentPieceId = '\0';
             StringBuilder pieceBlock = new StringBuilder();
-
+            
             while ((line = br.readLine()) != null) {
-                // Skip blank lines
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
+                if (line.trim().isEmpty()) continue; // skip blank lines
                 
                 char firstChar = getFirstNonWhitespaceChar(line);
                 
-                if (currentPieceId == '\0') { //Reading Piece
+                if (currentPieceId == '\0') { // Mulai membaca piece pertama
                     currentPieceId = firstChar;
                     pieceBlock.append(line).append("\n");
-                } else if (firstChar == currentPieceId) { //Kalau newline piece masih sama
+                } else if (firstChar == currentPieceId) { // Kalau huruf pertama sama, lanjut piece
                     pieceBlock.append(line).append("\n");
-                } else { // Change piece
+                } else { // Huruf berubah
                     pieces.add(Piece.fromString(pieceBlock.toString()));
                     pieceBlock.setLength(0);
                     currentPieceId = firstChar;
                     pieceBlock.append(line).append("\n");
                 }
-
+            }
+            // Tambahkan piece terakhir (kaalu ada)
             if (pieceBlock.length() > 0) {
                 pieces.add(Piece.fromString(pieceBlock.toString()));
             }
-            if (pieces.size() != pieceCount) {
-                System.out.println("Warning: Expected " + pieceCount + " pieces, but found " + pieces.size());
+            
+            if (pieces.size() != expectedPieceCount) {
+                System.out.println("Warning: Expected " + expectedPieceCount + " pieces, but found " + pieces.size());
             }
             
             // Solver:
-            //Default Sover
             DefaultSolver solver = new DefaultSolver(board, pieces);
             if (solver.solve()) {
-                System.out.println("Puzzle solved!");
-                board.print(); // print the board.
+                board.print();
+                System.out.println("\nPuzzle Solved");
             } else {
-                System.out.println("No solution found.");
-                }
-            } 
+                System.out.println("No Solution Found");
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-        
     
     private static char getFirstNonWhitespaceChar(String line) {
         for (int i = 0; i < line.length(); i++) {

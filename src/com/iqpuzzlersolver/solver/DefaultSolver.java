@@ -7,6 +7,8 @@ import java.util.List;
 public class DefaultSolver {
     private Board board;
     private List<Piece> pieces;
+    
+    private static final boolean DEBUG = false;
 
     public DefaultSolver(Board board, List<Piece> pieces) {
         this.board = board;
@@ -19,30 +21,44 @@ public class DefaultSolver {
     
     // Recursive untuk brute force
     private boolean solveHelper(int index) {
-        if (index == pieces.size()) { //Jika penempatan berhasil
+        if (index == pieces.size()) { // Jika penempatan berhasil
             return true;
         }
         
         Piece current = pieces.get(index);
         // POV, you get rotated
-        List<boolean[][]> rotations = current.getRotations(); // Ngamvil semua kemungkinan piece
+        // Ambil semua kemungkinan rotasi (termasuk cermin) dari piece
+        List<boolean[][]> rotations = current.getRotations();
         
         // Lakukan semua kemungkinan rotasi
         for (boolean[][] shape : rotations) {
             int shapeRows = shape.length;
             int shapeCols = shape[0].length;
             
-            // Untuk rotasi skrg, coba semua kemungkinan penempatan
+            // Untuk rotasi sekarang, coba semua kemungkinan penempatan
             for (int i = 0; i <= board.getRows() - shapeRows; i++) {
                 for (int j = 0; j <= board.getCols() - shapeCols; j++) {
                     if (board.canPlace(shape, i, j)) {
                         board.placePiece(shape, i, j, current.getId());
+                        
+                        // Jika DEBUG true, cetak status board dan lokasi penempatan
+                        if (DEBUG) {
+                            board.print();
+                            System.out.println("Placed piece " + current.getId() + " at (" + i + ", " + j + ")");
+                            System.out.println("----------------------");
+                        }
                         
                         // Aww dangit, again!
                         if (solveHelper(index + 1)) {
                             return true;
                         }
                         board.removePiece(shape, i, j);
+                        
+                        if (DEBUG) {
+                            board.print();
+                            System.out.println("Backtracked piece " + current.getId() + " from (" + i + ", " + j + ")");
+                            System.out.println("----------------------");
+                        }
                     }
                 }
             }

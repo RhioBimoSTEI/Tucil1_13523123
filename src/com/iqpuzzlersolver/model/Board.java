@@ -1,5 +1,8 @@
 package com.iqpuzzlersolver.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Board {
     private int rows;
     private int cols;
@@ -9,6 +12,7 @@ public class Board {
         this.rows = rows;
         this.cols = cols;
         grid = new char[rows][cols];
+        // Initialize board dengan '.' saat kosong
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 grid[i][j] = '.'; // Ketika kosong
@@ -69,15 +73,41 @@ public class Board {
         }
     }
     
-    // keknya bakal dihapus saat pake GUI (idk man)
+    // Keknya bakal dihapus saat pake GUI (idk man)
     public void print() {
+        Map<Character, String> colorMap = new HashMap<>();
+        // kolor
+        String[] colors = { ""
+            // "\u001B[31m", // Red
+            // "\u001B[32m", // Green
+            // "\u001B[33m", // Yellow
+            // "\u001B[34m", // Blue
+            // "\u001B[35m", // Magenta
+            // "\u001B[36m", // Cyan
+            // "\u001B[37m", // White
+            // "\u001B[91m", // Bright Red
+            // "\u001B[92m", // Bright Green
+            // "\u001B[93m", // Bright Yellow
+            // "\u001B[94m", // Bright Blue
+            // "\u001B[95m", // Bright Magenta
+            // "\u001B[96m"  // Bright Cyan
+        };
+        int colorIndex = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                System.out.print(grid[i][j] + " ");
+                char cell = grid[i][j];
+                if (cell != '.') {
+                    if (!colorMap.containsKey(cell)) {
+                        colorMap.put(cell, colors[colorIndex % colors.length]);
+                        colorIndex++;
+                    }
+                    // Print the cell in its designated color.
+                    System.out.print(colorMap.get(cell) + cell + "\u001B[0m");
+                } else {
+                    System.out.print(cell);
+                }
             }
             System.out.println();
         }
     }
 }
-
-// My IQ dropped by 10 points every-time I used javva, idk man....
