@@ -1,5 +1,5 @@
 package com.iqpuzzlersolver.gui;
 
-public class PiecePanel {
+public class SolvePanel {
     
 }
