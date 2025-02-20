@@ -11,7 +11,6 @@ public class DefaultSolver {
     
     public static boolean DEBUG = false; // Ganti jadi true kala mau lihat steps setiap program place/backtrack piece di board
     public static long Placing_steps = 0;
-    public static long Backtrack_steps = 0;
     
     private javax.swing.JPanel debugPanel = null;
     
@@ -51,9 +50,6 @@ public class DefaultSolver {
                         board.placePiece(shape, i, j, current.getId());
                         
                         if (DEBUG) {
-                            board.print();
-                            System.out.println("Placed piece " + current.getId() + " at (" + i + ", " + j + ")");
-                            System.out.println("----------------------");
                             if (debugPanel != null) {
                                 SwingUtilities.invokeLater(() -> debugPanel.repaint());
                                 try {
@@ -71,9 +67,6 @@ public class DefaultSolver {
                         board.removePiece(shape, i, j);
                         
                         if (DEBUG) {
-                            board.print();
-                            System.out.println("Backtracked piece " + current.getId() + " from (" + i + ", " + j + ")");
-                            System.out.println("----------------------");
                             if (debugPanel != null) {
                                 SwingUtilities.invokeLater(() -> debugPanel.repaint());
                                 try {
@@ -83,7 +76,6 @@ public class DefaultSolver {
                                 }
                             }
                         }
-                        Backtrack_steps++;
                     }
                 }
             }

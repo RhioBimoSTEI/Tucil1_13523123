@@ -1,0 +1,18 @@
+4 8 8
+DEFAULT
+OO
+PP
+PP
+P
+LL
+ L
+MM
+ M
+W WW
+WWWWW
+  W W
+ WW
+N
+NN
+III
+C

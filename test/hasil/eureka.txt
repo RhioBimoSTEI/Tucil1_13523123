@@ -1,0 +1,7 @@
+OOWWCWPP
+IWWWWWPP
+IWMWLLPN
+IMMWWLNN
+
+Elapsed time: 17873 ms
+Number of steps: 7291
