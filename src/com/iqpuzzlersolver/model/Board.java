@@ -1,6 +1,7 @@
 package com.iqpuzzlersolver.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Board {
@@ -126,6 +127,36 @@ public class Board {
         }
         return true;
     }
+
+    public boolean isSolved(List<Piece> pieces) {
+    // Check that the board is completely filled
+    if (!isComplete()) {
+        return false;
+    }
+    int filledCells = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (grid[i][j] != '.') {
+                filledCells++;
+            }
+        }
+    }
+    // Calculate the total number of cells that should be filled (the sum of all piece areas)
+    int totalPieceCells = 0;
+    for (Piece p : pieces) {
+        boolean[][] shape = p.getShape();
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+                if (shape[i][j]) {
+                    totalPieceCells++;
+                    }
+                }
+            }
+        }
+
+        return filledCells == totalPieceCells;
+    }
+
 
     public char[][] getGrid() { // for GUI
         return grid;

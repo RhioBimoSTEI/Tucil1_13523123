@@ -3,14 +3,12 @@ package com.iqpuzzlersolver.gui;
 import com.iqpuzzlersolver.model.Board;
 import com.iqpuzzlersolver.model.Piece;
 import com.iqpuzzlersolver.solver.DefaultSolver;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MainPanel extends JFrame {
     public MainPanel() {
@@ -20,7 +18,6 @@ public class MainPanel extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        
         JToggleButton debugToggle = new JToggleButton("DEBUG");
         debugToggle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -64,7 +61,7 @@ public class MainPanel extends JFrame {
             // Line 1: N M P
             String line = br.readLine();
             if (line == null) {
-                JOptionPane.showMessageDialog(this, "Input file is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Input file is empty. (idk how did you even do this)", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             String[] tokens = line.trim().split("\\s+");
@@ -78,7 +75,7 @@ public class MainPanel extends JFrame {
             // Line 2: Puzzle type (S)
             String puzzleType = br.readLine().trim();
             if (!puzzleType.equalsIgnoreCase("DEFAULT")) {
-                JOptionPane.showMessageDialog(this, "Only DEFAULT puzzle mode is supported in this example.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "For now, plz input only DEFAULT solve.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -107,26 +104,39 @@ public class MainPanel extends JFrame {
                 pieces.add(Piece.fromString(pieceBlock.toString()));
             }
             if (pieces.size() != expectedPieceCount) {
-                JOptionPane.showMessageDialog(this, "Program Exitted: Expected " + expectedPieceCount + " pieces, but found " + pieces.size(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Program Exitted: Expected " + expectedPieceCount + " pieces, but found " + pieces.size() + " UwU", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             // Solver:
-            long startTime = System.nanoTime();
+            
             DefaultSolver solver = new DefaultSolver(board, pieces);
-            if (solver.solve()) {
-                if (!board.isComplete()) {
-                    JOptionPane.showMessageDialog(this, "Error: Board has empty spaces", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-                // Switch to SolvePanel to display the finished board
-                SolvePanel solvePanel = new SolvePanel(board, elapsedTime);
-                MainPanel.this.setContentPane(solvePanel);
+            long startTime = System.nanoTime();
+
+            if (DefaultSolver.DEBUG) {
+                GUIPieces debugPanel = new GUIPieces(board);
+                solver.setDebugPanel(debugPanel);
+                MainPanel.this.setContentPane(debugPanel);
                 MainPanel.this.revalidate();
-            } else {
-                JOptionPane.showMessageDialog(this, "No Solution Found", "Error", JOptionPane.ERROR_MESSAGE);
             }
+
+            new Thread(() -> {
+                boolean solved = solver.solve();
+                long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+                SwingUtilities.invokeLater(() -> {
+                     if (solved && board.isSolved(pieces)) {
+                         SolvePanel solvePanel = new SolvePanel(board, elapsedTime);
+                         MainPanel.this.setContentPane(solvePanel);
+                         MainPanel.this.revalidate();
+                     } else {
+                         JOptionPane.showMessageDialog(MainPanel.this, 
+                             "No Solution Found or Puzzle pieces too few UwU.", 
+                             "Error", 
+                             JOptionPane.ERROR_MESSAGE);
+                     }
+                });
+            }).start();
+
         } catch (IOException | IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

@@ -38,11 +38,11 @@ public class Piece {
                     if (id == ' ') {
                         id = line.charAt(j);
                         if (!Character.isUpperCase(id) || id < 'A' || id > 'Z') {
-                            throw new IllegalArgumentException("Error: Piece ID is not valid");
+                            throw new IllegalArgumentException("Error: Piece ID is not valid UwU");
                         }
                     } else {
                         if (line.charAt(j) != id) {
-                            throw new IllegalArgumentException("Error: Piece ID is not valid");
+                            throw new IllegalArgumentException("Error: Piece ID is not valid OwO");
                         }
                     }
                     shape[i][j] = true;
