@@ -12,10 +12,9 @@ public class GUIPieces extends JPanel {
 
     public GUIPieces(Board board) {
         this.board = board;
-        // Predefined colors for piece IDs – you can adjust these as needed.
         Color[] colors = {
             Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE,
-            new Color(75, 0, 130), new Color(148, 0, 211), Color.WHITE, Color.BLACK,
+            new Color(75, 0, 130), new Color(148, 0, 211), Color.WHITE,
             Color.CYAN, new Color(128, 0, 128), Color.MAGENTA
         };
         int colorIndex = 0;
@@ -44,7 +43,6 @@ public class GUIPieces extends JPanel {
             for (int j = 0; j < cols; j++) {
                 int x = j * cellSize;
                 int y = i * cellSize;
-                // Draw an empty slot as a light gray circle
                 g2.setColor(Color.LIGHT_GRAY);
                 g2.drawOval(x, y, cellSize, cellSize);
                 char cell = grid[i][j];
@@ -54,7 +52,6 @@ public class GUIPieces extends JPanel {
                     g2.fillOval(x, y, cellSize, cellSize);
                     g2.setColor(Color.BLACK);
                     g2.drawOval(x, y, cellSize, cellSize);
-                    // Draw the piece ID at the center
                     g2.setColor(Color.BLACK);
                     g2.setFont(new Font("Arial", Font.BOLD, cellSize / 2));
                     FontMetrics fm = g2.getFontMetrics();

@@ -1,6 +1,7 @@
 package com.iqpuzzlersolver.gui;
 
 import com.iqpuzzlersolver.model.Board;
+import com.iqpuzzlersolver.solver.DefaultSolver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,15 +20,15 @@ public class SolvePanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Top label
-        JLabel titleLabel = new JLabel("Puzzle Solved", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Puzzle Solved!!", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Center: custom drawing panel for board pieces
+        // Center
         GUIPieces guiPieces = new GUIPieces(board);
         add(guiPieces, BorderLayout.CENTER);
 
-        // Bottom: save button and elapsed time info
+        // Bottom
         JPanel bottomPanel = new JPanel(new FlowLayout());
         JButton saveButton = new JButton("Save Board");
         saveButton.addActionListener(new ActionListener() {
@@ -45,7 +46,9 @@ public class SolvePanel extends JPanel {
         bottomPanel.add(saveButton);
 
         JLabel timeLabel = new JLabel("Time: " + elapsedTime + " ms");
+        JLabel iterateLabel = new JLabel("Steps/Iteration: " + DefaultSolver.Placing_steps + " steps");
         bottomPanel.add(timeLabel);
+        bottomPanel.add(iterateLabel);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -55,7 +58,6 @@ public class SolvePanel extends JPanel {
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
             try (PrintWriter out = new PrintWriter(file)) {
-                // Write board as text by iterating through the grid
                 char[][] grid = board.getGrid();
                 for (int i = 0; i < board.getRows(); i++) {
                     for (int j = 0; j < board.getCols(); j++) {
@@ -63,6 +65,8 @@ public class SolvePanel extends JPanel {
                     }
                     out.println();
                 }
+                out.println("\nElapsed time: " + elapsedTime + " ms");
+                out.println("Number of steps: " + DefaultSolver.Placing_steps);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(SolvePanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -70,11 +74,32 @@ public class SolvePanel extends JPanel {
     }
 
     private void saveAsImage(JPanel panel) {
-        BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        int extraHeight = 50;
+        int width = panel.getWidth();
+        int height = panel.getHeight() + extraHeight;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
+        
+        // Bg color fill
+        g2.setColor(Color.WHITE);
+        g2.fillRect(0, 0, width, height);
+        
         panel.paint(g2);
+        
+        // Set up text drawing properties
+        g2.setColor(Color.BLACK);
+        g2.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        String elapsedTimeStr = "Elapsed time: " + elapsedTime + " ms";
+        String stepsStr = "Steps: " + DefaultSolver.Placing_steps;
+        
+        int textX = 10;  // left margin
+        int textY = panel.getHeight() + 20;
+        g2.drawString(elapsedTimeStr, textX, textY);
+        g2.drawString(stepsStr, textX, textY + 20);
+        
         g2.dispose();
-
+    
         JFileChooser chooser = new JFileChooser();
         int option = chooser.showSaveDialog(SolvePanel.this);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -86,4 +111,5 @@ public class SolvePanel extends JPanel {
             }
         }
     }
+    
 }

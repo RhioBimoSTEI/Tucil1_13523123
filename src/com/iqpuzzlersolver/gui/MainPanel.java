@@ -11,20 +11,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// Keep your initial comments intact
-// MainPanel for IQ Puzzler Solver GUI
+
 public class MainPanel extends JFrame {
     public MainPanel() {
         setTitle("IQ Puzzler Solver");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 600); // Pls ganti tergantung resolusi layar ehe
         setLocationRelativeTo(null);
 
-        // Top panel with DEBUG toggle switch
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
         JToggleButton debugToggle = new JToggleButton("DEBUG");
-        // NOTE: Changed DEBUG from final to non-final in DefaultSolver so it can be toggled
         debugToggle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DefaultSolver.DEBUG = debugToggle.isSelected();
@@ -32,7 +29,6 @@ public class MainPanel extends JFrame {
         });
         topPanel.add(debugToggle);
 
-        // Center panel with program title and upload button
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         JLabel titleLabel = new JLabel("IQ Puzzler Solver");

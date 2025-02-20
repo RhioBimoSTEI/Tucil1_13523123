@@ -2,4 +2,6 @@ This is My To-Do List:
 1. Make GUI
 2. Make DEBUG of Solving Could be Seen on GUI
 3. Make Error be Visible from GUI
+4. Make a loading/indication that the file is being processed (if the DEBUG is not on)
+6. Add Back button
 #. Further Testing
