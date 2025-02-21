@@ -61,7 +61,8 @@ public class MainPanel extends JFrame {
             // Line 1: N M P
             String line = br.readLine();
             if (line == null) {
-                JOptionPane.showMessageDialog(this, "Input file is empty. (idk how did you even do this)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Input file is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                backToMain();
                 return;
             }
             String[] tokens = line.trim().split("\\s+");
@@ -75,7 +76,8 @@ public class MainPanel extends JFrame {
             // Line 2: Puzzle type (S)
             String puzzleType = br.readLine().trim();
             if (!puzzleType.equalsIgnoreCase("DEFAULT")) {
-                JOptionPane.showMessageDialog(this, "For now, plz input only DEFAULT solve.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Only DEFAULT puzzle mode is supported.", "Error", JOptionPane.ERROR_MESSAGE);
+                backToMain();
                 return;
             }
 
@@ -104,41 +106,44 @@ public class MainPanel extends JFrame {
                 pieces.add(Piece.fromString(pieceBlock.toString()));
             }
             if (pieces.size() != expectedPieceCount) {
-                JOptionPane.showMessageDialog(this, "Program Exitted: Expected " + expectedPieceCount + " pieces, but found " + pieces.size() + " UwU", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Program Exitted: Expected " + expectedPieceCount + " pieces, but found " + pieces.size() + " OwO", "Error", JOptionPane.ERROR_MESSAGE);
+                backToMain();
                 return;
             }
-            
-            // Solver:
             
             DefaultSolver solver = new DefaultSolver(board, pieces);
             long startTime = System.nanoTime();
 
-            if (DefaultSolver.DEBUG) {
+            // If DEBUG mode is off, show a loading indicator.
+            if (!DefaultSolver.DEBUG) {
+                setContentPane(new LoadingPanel());
+                revalidate();
+            } else {
+                // If debug is on, create a live, colorized debug view.
                 GUIPieces debugPanel = new GUIPieces(board);
                 solver.setDebugPanel(debugPanel);
-                MainPanel.this.setContentPane(debugPanel);
-                MainPanel.this.revalidate();
+                setContentPane(debugPanel);
+                revalidate();
             }
 
             new Thread(() -> {
                 boolean solved = solver.solve();
                 long elapsedTime = (System.nanoTime() - startTime) / 1000000;
                 SwingUtilities.invokeLater(() -> {
-                     if (solved && board.isSolved(pieces)) {
-                         SolvePanel solvePanel = new SolvePanel(board, elapsedTime);
-                         MainPanel.this.setContentPane(solvePanel);
-                         MainPanel.this.revalidate();
-                     } else {
-                         JOptionPane.showMessageDialog(MainPanel.this, 
-                             "No Solution Found or Puzzle pieces too few UwU.", 
-                             "Error", 
-                             JOptionPane.ERROR_MESSAGE);
-                     }
+                    if (solved && board.isSolved(pieces)) {
+                        // Switch to final view with solved configuration and save options.
+                        setContentPane(new SolvePanel(board, elapsedTime));
+                        revalidate();
+                    } else {
+                        JOptionPane.showMessageDialog(MainPanel.this, "Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
+                        backToMain();
+                    }
                 });
             }).start();
 
         } catch (IOException | IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            backToMain();
         }
     }
 
@@ -149,6 +154,15 @@ public class MainPanel extends JFrame {
             }
         }
         return ' ';
+    }
+    
+    // Open a new MainPanel
+    private void backToMain() {
+        // Dispose the current frame
+        SwingUtilities.invokeLater(() -> {
+            dispose();
+            new MainPanel().setVisible(true); // Open a new MainPanel
+        });
     }
 
     public static void main(String[] args) {

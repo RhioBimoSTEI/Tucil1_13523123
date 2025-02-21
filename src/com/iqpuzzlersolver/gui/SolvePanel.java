@@ -2,7 +2,6 @@ package com.iqpuzzlersolver.gui;
 
 import com.iqpuzzlersolver.model.Board;
 import com.iqpuzzlersolver.solver.DefaultSolver;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -24,11 +23,11 @@ public class SolvePanel extends JPanel {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Center
+        // Center Panel
         GUIPieces guiPieces = new GUIPieces(board);
         add(guiPieces, BorderLayout.CENTER);
 
-        // Bottom
+        // Bottom Panel
         JPanel bottomPanel = new JPanel(new FlowLayout());
         JButton saveButton = new JButton("Save Board");
         saveButton.addActionListener(new ActionListener() {
@@ -44,9 +43,20 @@ public class SolvePanel extends JPanel {
             }
         });
         bottomPanel.add(saveButton);
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Return to main panel.
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SolvePanel.this);
+                frame.dispose();
+                new MainPanel().setVisible(true);
+            }
+        });
+        bottomPanel.add(backButton);
 
         JLabel timeLabel = new JLabel("Time: " + elapsedTime + " ms");
-        JLabel iterateLabel = new JLabel("Steps/Iteration: " + DefaultSolver.Placing_steps + " steps");
+        JLabel iterateLabel = new JLabel("Steps: " + DefaultSolver.Placing_steps + " steps");
         bottomPanel.add(timeLabel);
         bottomPanel.add(iterateLabel);
         add(bottomPanel, BorderLayout.SOUTH);
@@ -66,7 +76,7 @@ public class SolvePanel extends JPanel {
                     out.println();
                 }
                 out.println("\nElapsed time: " + elapsedTime + " ms");
-                out.println("Number of steps: " + DefaultSolver.Placing_steps);
+                out.println("Steps: " + DefaultSolver.Placing_steps);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(SolvePanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -80,7 +90,7 @@ public class SolvePanel extends JPanel {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
         
-        // Bg color fill
+        // Background color fill
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, width, height);
         
@@ -111,5 +121,4 @@ public class SolvePanel extends JPanel {
             }
         }
     }
-    
 }
