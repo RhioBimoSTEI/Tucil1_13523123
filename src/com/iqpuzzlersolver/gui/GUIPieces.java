@@ -22,7 +22,7 @@ public class GUIPieces extends JPanel {
         for (int i = 0; i < board.getRows(); i++) {
             for (int j = 0; j < board.getCols(); j++) {
                 char cell = grid[i][j];
-                if (cell != '.' && !colorMap.containsKey(cell)) {
+                if (cell != '.' && cell != ' ' && !colorMap.containsKey(cell)) {
                     colorMap.put(cell, colors[colorIndex % colors.length]);
                     colorIndex++;
                 }
@@ -43,24 +43,61 @@ public class GUIPieces extends JPanel {
             for (int j = 0; j < cols; j++) {
                 int x = j * cellSize;
                 int y = i * cellSize;
-                g2.setColor(Color.LIGHT_GRAY);
-                g2.drawOval(x, y, cellSize, cellSize);
-                char cell = grid[i][j];
-                if (cell != '.') {
-                    Color pieceColor = colorMap.get(cell);
-                    g2.setColor(pieceColor);
-                    g2.fillOval(x, y, cellSize, cellSize);
-                    g2.setColor(Color.BLACK);
+                if (board.isCustom()) {
+                    if (board.isPlayable(i, j)) {
+                        char cell = grid[i][j];
+                        if (cell == '.') {
+                            // Empty playable cell:
+                            g2.setColor(Color.WHITE);
+                            g2.fillOval(x, y, cellSize, cellSize);
+                        } else {
+                            // Placed piece: use its color
+                            Color pieceColor = colorMap.get(cell);
+                            if (pieceColor == null) {
+                                pieceColor = Color.GRAY;
+                            }
+                            g2.setColor(pieceColor);
+                            g2.fillOval(x, y, cellSize, cellSize);
+                            g2.setColor(Color.BLACK);
+                            g2.drawOval(x, y, cellSize, cellSize);
+                            g2.setColor(Color.BLACK);
+                            g2.setFont(new Font("Arial", Font.BOLD, cellSize / 2));
+                            FontMetrics fm = g2.getFontMetrics();
+                            String idStr = String.valueOf(cell);
+                            int textWidth = fm.stringWidth(idStr);
+                            int textHeight = fm.getAscent();
+                            int textX = x + (cellSize - textWidth) / 2;
+                            int textY = y + (cellSize + textHeight) / 2;
+                            g2.drawString(idStr, textX, textY);
+                        }
+                    } else {
+                        // Non-playable cell
+                        g2.setColor(Color.BLACK);
+                        g2.fillOval(x, y, cellSize, cellSize);
+                        g2.setColor(Color.BLACK);
+                        g2.drawOval(x, y, cellSize, cellSize);
+                    }
+                } else {
+                    // DEFAULT mode:
+                    g2.setColor(Color.LIGHT_GRAY);
                     g2.drawOval(x, y, cellSize, cellSize);
-                    g2.setColor(Color.BLACK);
-                    g2.setFont(new Font("Arial", Font.BOLD, cellSize / 2));
-                    FontMetrics fm = g2.getFontMetrics();
-                    String idStr = String.valueOf(cell);
-                    int textWidth = fm.stringWidth(idStr);
-                    int textHeight = fm.getAscent();
-                    int textX = x + (cellSize - textWidth) / 2;
-                    int textY = y + (cellSize + textHeight) / 2;
-                    g2.drawString(idStr, textX, textY);
+                    char cell = grid[i][j];
+                    if (cell != '.') {
+                        Color pieceColor = colorMap.get(cell);
+                        g2.setColor(pieceColor);
+                        g2.fillOval(x, y, cellSize, cellSize);
+                        g2.setColor(Color.BLACK);
+                        g2.drawOval(x, y, cellSize, cellSize);
+                        g2.setColor(Color.BLACK);
+                        g2.setFont(new Font("Arial", Font.BOLD, cellSize / 2));
+                        FontMetrics fm = g2.getFontMetrics();
+                        String idStr = String.valueOf(cell);
+                        int textWidth = fm.stringWidth(idStr);
+                        int textHeight = fm.getAscent();
+                        int textX = x + (cellSize - textWidth) / 2;
+                        int textY = y + (cellSize + textHeight) / 2;
+                        g2.drawString(idStr, textX, textY);
+                    }
                 }
             }
         }

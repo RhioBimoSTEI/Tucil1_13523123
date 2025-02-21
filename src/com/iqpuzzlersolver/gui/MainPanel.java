@@ -3,6 +3,7 @@ package com.iqpuzzlersolver.gui;
 import com.iqpuzzlersolver.model.Board;
 import com.iqpuzzlersolver.model.Piece;
 import com.iqpuzzlersolver.solver.DefaultSolver;
+import com.iqpuzzlersolver.solver.CustomSolver;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainPanel extends JFrame {
+    private Object currentSolver = null; // can be DefaultSolver or CustomSolver
+    
     public MainPanel() {
         setTitle("IQ Puzzler Solver");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,18 +73,24 @@ public class MainPanel extends JFrame {
             int cols = Integer.parseInt(tokens[1]);
             int expectedPieceCount = Integer.parseInt(tokens[2]);
 
-            // Buat board
-            Board board = new Board(rows, cols);
-
             // Line 2: Puzzle type (S)
             String puzzleType = br.readLine().trim();
-            if (!puzzleType.equalsIgnoreCase("DEFAULT")) {
-                JOptionPane.showMessageDialog(this, "Only DEFAULT puzzle mode is supported.", "Error", JOptionPane.ERROR_MESSAGE);
+            Board board = null;
+            if (puzzleType.equalsIgnoreCase("DEFAULT")) {
+                board = new Board(rows, cols);
+            } else if (puzzleType.equalsIgnoreCase("CUSTOM")) { // if custom mode, read board pattern
+                String[] pattern = new String[rows];
+                for (int i = 0; i < rows; i++) {
+                    pattern[i] = br.readLine();
+                }
+                board = new Board(pattern);
+            } else {
+                JOptionPane.showMessageDialog(this, "Only DEFAULT and CUSTOM puzzle modes are supported.", "Error", JOptionPane.ERROR_MESSAGE);
                 backToMain();
                 return;
             }
 
-            // Lines 3++: Puzzle pieces
+            // Line 3++: P pieces
             List<Piece> pieces = new ArrayList<>();
             char currentPieceId = '\0';
             StringBuilder pieceBlock = new StringBuilder();
@@ -111,36 +120,77 @@ public class MainPanel extends JFrame {
                 return;
             }
             
-            DefaultSolver solver = new DefaultSolver(board, pieces);
-            long startTime = System.nanoTime();
+            // Solver:
+            Runnable stopCallback = () -> {
+                if (currentSolver instanceof DefaultSolver) {
+                    ((DefaultSolver) currentSolver).cancel();
+                } else if (currentSolver instanceof CustomSolver) {
+                    ((CustomSolver) currentSolver).cancel();
+                }
+                backToMain();
+            };
 
-            // If DEBUG mode is off, show a loading indicator.
-            if (!DefaultSolver.DEBUG) {
-                setContentPane(new LoadingPanel());
+
+            // Default mode
+            if (puzzleType.equalsIgnoreCase("DEFAULT")) {
+                DefaultSolver solver = new DefaultSolver(board, pieces);
+                currentSolver = solver;
+                long startTime = System.nanoTime();
+
+                // If DEBUG mode is off, show a loading indicator.
+                if (!DefaultSolver.DEBUG) {
+                    setContentPane(new LoadingPanel(stopCallback));
+                    revalidate();
+                } else {
+                    // If debug is on, create a live, colorized debug view.
+                    GUIPieces debugPanel = new GUIPieces(board);
+                    solver.setDebugPanel(debugPanel);
+                    // Optionally, add stop button to debug view
+                    JPanel debugContainer = new JPanel(new BorderLayout());
+                    debugContainer.add(debugPanel, BorderLayout.CENTER);
+                    JButton stopButton = new JButton("Stop");
+                    stopButton.addActionListener(e -> stopCallback.run());
+                    debugContainer.add(stopButton, BorderLayout.SOUTH);
+                    setContentPane(debugContainer);
+                    revalidate();
+                }
+
+                new Thread(() -> {
+                    boolean solved = solver.solve();
+                    long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+                    SwingUtilities.invokeLater(() -> {
+                        if (solved && board.isSolved(pieces)) {
+                            setContentPane(new SolvePanel(board, elapsedTime));
+                            revalidate();
+                        } else {
+                            JOptionPane.showMessageDialog(MainPanel.this, "Oh nyo... Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
+                            backToMain();
+                        }
+                    });
+                }).start();
+            } else if (puzzleType.equalsIgnoreCase("CUSTOM")) {
+                CustomSolver solver = new CustomSolver(board, pieces);
+                currentSolver = solver;
+                long startTime = System.nanoTime();
+
+                // CUSTOM mode
+                setContentPane(new LoadingPanel(stopCallback));
                 revalidate();
-            } else {
-                // If debug is on, create a live, colorized debug view.
-                GUIPieces debugPanel = new GUIPieces(board);
-                solver.setDebugPanel(debugPanel);
-                setContentPane(debugPanel);
-                revalidate();
+
+                new Thread(() -> {
+                    boolean solved = solver.solve();
+                    long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+                    SwingUtilities.invokeLater(() -> {
+                        if (solved && board.isSolved(pieces)) {
+                            setContentPane(new SolvePanel(board, elapsedTime));
+                            revalidate();
+                        } else {
+                            JOptionPane.showMessageDialog(MainPanel.this, "Oh nyo... Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
+                            backToMain();
+                        }
+                    });
+                }).start();
             }
-
-            new Thread(() -> {
-                boolean solved = solver.solve();
-                long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-                SwingUtilities.invokeLater(() -> {
-                    if (solved && board.isSolved(pieces)) {
-                        // Switch to final view with solved configuration and save options.
-                        setContentPane(new SolvePanel(board, elapsedTime));
-                        revalidate();
-                    } else {
-                        JOptionPane.showMessageDialog(MainPanel.this, "Oh nyo... Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
-                        backToMain();
-                    }
-                });
-            }).start();
-
         } catch (IOException | IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             backToMain();

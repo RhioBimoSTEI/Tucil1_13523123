@@ -14,6 +14,11 @@ public class DefaultSolver {
     
     private javax.swing.JPanel debugPanel = null;
     
+    private volatile boolean cancelled = false;
+    
+    public void cancel() {
+        cancelled = true;
+    }
 
     public void setDebugPanel(javax.swing.JPanel debugPanel) {
         this.debugPanel = debugPanel;
@@ -30,6 +35,7 @@ public class DefaultSolver {
     
     // Recursive untuk brute force
     private boolean solveHelper(int index) {
+        if (cancelled) return false;
         if (index == pieces.size()) { // Jika penempatan berhasil
             return true;
         }
@@ -40,12 +46,14 @@ public class DefaultSolver {
         
         // Lakukan semua kemungkinan rotasi
         for (boolean[][] shape : rotations) {
+            if (cancelled) return false;
             int shapeRows = shape.length;
             int shapeCols = shape[0].length;
             
             // Untuk rotasi sekarang, coba semua kemungkinan penempatan
             for (int i = 0; i <= board.getRows() - shapeRows; i++) {
                 for (int j = 0; j <= board.getCols() - shapeCols; j++) {
+                    if (cancelled) return false;
                     if (board.canPlace(shape, i, j)) {
                         board.placePiece(shape, i, j, current.getId());
                         

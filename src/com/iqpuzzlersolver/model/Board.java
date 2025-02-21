@@ -9,6 +9,10 @@ public class Board {
     private int cols;
     private char[][] grid;
     
+    // For custom mode
+    private boolean isCustom = false;
+    private boolean[][] playable = null;
+    
     public Board(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
@@ -17,6 +21,29 @@ public class Board {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 grid[i][j] = '.'; // Ketika kosong
+            }
+        }
+    }
+    
+    // New constructor for CUSTOM mode using board pattern
+    public Board(String[] pattern) {
+        this.rows = pattern.length;
+        this.cols = pattern[0].length();
+        grid = new char[rows][cols];
+        playable = new boolean[rows][cols];
+        isCustom = true;
+        // Custom mode, initialize board pattern 'X' is playable cells
+        // I just realize that '.' is playable cell in default mode but not in custom mode (fml) why did I do it like this T^T
+        for (int i = 0; i < rows; i++) {
+            String line = pattern[i];
+            for (int j = 0; j < cols; j++) {
+                if (j < line.length() && line.charAt(j) == 'X') {
+                    playable[i][j] = true;
+                    grid[i][j] = '.'; // empty playable cell
+                } else {
+                    playable[i][j] = false;
+                    grid[i][j] = ' '; // non-playable cell
+                }
             }
         }
     }
@@ -40,8 +67,17 @@ public class Board {
         // Cek bisa masuk atau tidak (shape ke board)
         for (int i = 0; i < shapeRows; i++) {
             for (int j = 0; j < shapeCols; j++) {
-                if (shape[i][j] && grid[row + i][col + j] != '.') {
-                    return false;
+                if (shape[i][j]) {
+                    // di Custom, cek playable cell
+                    if (isCustom) {
+                        if (!playable[row + i][col + j] || grid[row + i][col + j] != '.') {
+                            return false;
+                        }
+                    } else {
+                        if (grid[row + i][col + j] != '.') {
+                            return false;
+                        }
+                    }
                 }
             }
         }
@@ -68,7 +104,8 @@ public class Board {
         for (int i = 0; i < shapeRows; i++) {
             for (int j = 0; j < shapeCols; j++) {
                 if (shape[i][j]) {
-                    grid[row + i][col + j] = '.';
+                    // kalau bisa ditaro maka '.', kalau nggak ' '
+                    grid[row + i][col + j] = (isCustom && playable[row + i][col + j]) ? '.' : ' ';
                 }
             }
         }
@@ -101,7 +138,7 @@ public class Board {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char cell = grid[i][j];
-                if (cell != '.') {
+                if (cell != '.' && cell != ' ') {
                     if (!colorMap.containsKey(cell)) {
                         colorMap.put(cell, colors[colorIndex % colors.length]);
                         colorIndex++;
@@ -120,8 +157,14 @@ public class Board {
     public boolean isComplete() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (grid[i][j] == '.') {
-                    return false;
+                if (isCustom) {
+                    if (playable[i][j] && grid[i][j] == '.') {
+                        return false;
+                    }
+                } else {
+                    if (grid[i][j] == '.') {
+                        return false;
+                    }
                 }
             }
         }
@@ -129,31 +172,30 @@ public class Board {
     }
 
     public boolean isSolved(List<Piece> pieces) {
-    // Check that the board is completely filled
-    if (!isComplete()) {
-        return false;
-    }
-    int filledCells = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (grid[i][j] != '.') {
-                filledCells++;
-            }
+        // Check that the board is completely filled
+        if (!isComplete()) {
+            return false;
         }
-    }
-    // Calculate the total number of cells that should be filled (the sum of all piece areas)
-    int totalPieceCells = 0;
-    for (Piece p : pieces) {
-        boolean[][] shape = p.getShape();
-        for (int i = 0; i < shape.length; i++) {
-            for (int j = 0; j < shape[i].length; j++) {
-                if (shape[i][j]) {
-                    totalPieceCells++;
-                    }
+        int filledCells = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] != '.' && grid[i][j] != ' ') {
+                    filledCells++;
                 }
             }
         }
 
+        int totalPieceCells = 0;
+        for (Piece p : pieces) {
+            boolean[][] shape = p.getShape();
+            for (int i = 0; i < shape.length; i++) {
+                for (int j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        totalPieceCells++;
+                    }
+                }
+            }
+        }
         return filledCells == totalPieceCells;
     }
 
@@ -162,4 +204,14 @@ public class Board {
         return grid;
     }
     
+    public boolean isCustom() {
+        return isCustom;
+    }
+    
+    public boolean isPlayable(int i, int j) {
+        if (isCustom && playable != null) {
+            return playable[i][j];
+        }
+        return true;
+    }
 }
