@@ -2,12 +2,12 @@ package com.iqpuzzlersolver.gui;
 
 import com.iqpuzzlersolver.model.Board;
 import com.iqpuzzlersolver.solver.DefaultSolver;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class SolvePanel extends JPanel {
     private Board board;
@@ -51,6 +51,7 @@ public class SolvePanel extends JPanel {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SolvePanel.this);
                 frame.dispose();
                 new MainPanel().setVisible(true);
+                DefaultSolver.Placing_steps = 0;
             }
         });
         bottomPanel.add(backButton);

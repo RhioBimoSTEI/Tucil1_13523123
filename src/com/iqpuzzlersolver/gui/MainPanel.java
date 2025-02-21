@@ -61,7 +61,7 @@ public class MainPanel extends JFrame {
             // Line 1: N M P
             String line = br.readLine();
             if (line == null) {
-                JOptionPane.showMessageDialog(this, "Input file is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Inpwut file is ewmpty. T^T", "Error", JOptionPane.ERROR_MESSAGE);
                 backToMain();
                 return;
             }
@@ -135,7 +135,7 @@ public class MainPanel extends JFrame {
                         setContentPane(new SolvePanel(board, elapsedTime));
                         revalidate();
                     } else {
-                        JOptionPane.showMessageDialog(MainPanel.this, "Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(MainPanel.this, "Oh nyo... Nyo Sowution Found or Puzzle wequiwements not met UwU.", "Error", JOptionPane.ERROR_MESSAGE);
                         backToMain();
                     }
                 });
@@ -162,6 +162,7 @@ public class MainPanel extends JFrame {
         SwingUtilities.invokeLater(() -> {
             dispose();
             new MainPanel().setVisible(true); // Open a new MainPanel
+            DefaultSolver.Placing_steps = 0;
         });
     }
 
