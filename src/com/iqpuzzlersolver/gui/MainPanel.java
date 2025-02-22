@@ -61,7 +61,7 @@ public class MainPanel extends JFrame {
             // Line 1: N M P
             String line = br.readLine();
             if (line == null) {
-                JOptionPane.showMessageDialog(this, "Input file is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Input file is empty. OwO", "Error", JOptionPane.ERROR_MESSAGE);
                 backToMain();
                 return;
             }
