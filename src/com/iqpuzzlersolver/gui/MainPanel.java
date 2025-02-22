@@ -76,7 +76,7 @@ public class MainPanel extends JFrame {
             // Line 2: Puzzle type (S)
             String puzzleType = br.readLine().trim();
             if (!puzzleType.equalsIgnoreCase("DEFAULT")) {
-                JOptionPane.showMessageDialog(this, "Only DEFAULT puzzle mode is supported.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Onwy DEFAULT puzzle mode is suppowted.", "Error", JOptionPane.ERROR_MESSAGE);
                 backToMain();
                 return;
             }

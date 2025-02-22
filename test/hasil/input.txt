@@ -1,0 +1,7 @@
+LOOAAATT
+LGGGGATC
+LMGBBAAC
+LLLBBBCC
+
+Elapsed time: 5 ms
+Steps: 401

@@ -1,0 +1,8 @@
+ABCDEF
+GHIJKL
+MNOPQR
+STUVWX
+YZZZZZ
+
+Elapsed time: 4 ms
+Steps: 26
