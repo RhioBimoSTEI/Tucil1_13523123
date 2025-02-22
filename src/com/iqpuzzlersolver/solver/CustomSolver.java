@@ -8,6 +8,8 @@ public class CustomSolver {
     private Board board;
     private List<Piece> pieces;
     
+    public static long Placing_steps = 0;
+    
     private volatile boolean cancelled = false;
     
     public void cancel() {
@@ -45,6 +47,7 @@ public class CustomSolver {
                     // Make sure only place the piece if it's valid
                     if (board.canPlace(shape, i, j)) {
                         board.placePiece(shape, i, j, current.getId());
+                        Placing_steps++; // Increment the step counter for each placement
                         
                         if (solveHelper(index + 1)) {
                             return true;

@@ -75,10 +75,10 @@ public class MainPanel extends JFrame {
 
             // Line 2: Puzzle type (S)
             String puzzleType = br.readLine().trim();
-            Board board = null;
+            Board board;
             if (puzzleType.equalsIgnoreCase("DEFAULT")) {
                 board = new Board(rows, cols);
-            } else if (puzzleType.equalsIgnoreCase("CUSTOM")) { // if custom mode, read board pattern
+            } else if (puzzleType.equalsIgnoreCase("CUSTOM")) {
                 String[] pattern = new String[rows];
                 for (int i = 0; i < rows; i++) {
                     pattern[i] = br.readLine();
@@ -136,7 +136,7 @@ public class MainPanel extends JFrame {
                 DefaultSolver solver = new DefaultSolver(board, pieces);
                 currentSolver = solver;
                 long startTime = System.nanoTime();
-
+            
                 // If DEBUG mode is off, show a loading indicator.
                 if (!DefaultSolver.DEBUG) {
                     setContentPane(new LoadingPanel(stopCallback));
@@ -154,7 +154,7 @@ public class MainPanel extends JFrame {
                     setContentPane(debugContainer);
                     revalidate();
                 }
-
+            
                 new Thread(() -> {
                     boolean solved = solver.solve();
                     long elapsedTime = (System.nanoTime() - startTime) / 1000000;
@@ -167,16 +167,17 @@ public class MainPanel extends JFrame {
                             backToMain();
                         }
                     });
-                }).start();
+                }).start();           
+
+            // Custom mode
             } else if (puzzleType.equalsIgnoreCase("CUSTOM")) {
                 CustomSolver solver = new CustomSolver(board, pieces);
                 currentSolver = solver;
                 long startTime = System.nanoTime();
-
-                // CUSTOM mode
+            
                 setContentPane(new LoadingPanel(stopCallback));
                 revalidate();
-
+            
                 new Thread(() -> {
                     boolean solved = solver.solve();
                     long elapsedTime = (System.nanoTime() - startTime) / 1000000;
@@ -191,6 +192,7 @@ public class MainPanel extends JFrame {
                     });
                 }).start();
             }
+            
         } catch (IOException | IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             backToMain();

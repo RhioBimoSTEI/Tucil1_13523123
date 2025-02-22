@@ -34,7 +34,7 @@ public class LoadingPanel extends JPanel {
         
         // Start the brainrot
         musicPlayer = new MusicPlayer();
-        musicPlayer.playMusic("com/iqpuzzlersolver/gui/msuic.wav"); // name of music file
+        musicPlayer.playMusic("src/com/iqpuzzlersolver/gui/music.wav"); // name of music file
     }
     
     public void stopMusic() {
