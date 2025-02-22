@@ -2,8 +2,8 @@ package com.iqpuzzlersolver.solver;
 
 import com.iqpuzzlersolver.model.Board;
 import com.iqpuzzlersolver.model.Piece;
-import javax.swing.SwingUtilities;
 import java.util.List;
+import javax.swing.SwingUtilities;
 
 public class DefaultSolver {
     private Board board;

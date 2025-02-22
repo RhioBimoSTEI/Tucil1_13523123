@@ -1,9 +1,7 @@
 This is My To-Do List:
-1. Make GUI
-4. Make a loading/indication that the file is being processed (if the DEBUG is not on)
 6. Add Back button and when error/no solution, go back to MainPanel
 7. Do Custom Solving
 8. Add Stop Button on Debug or while solving
-9. Visualize the board (future is also for custom solving)
+9. Visualize the board for custom solving
 (Optional) : Do Pyramid Solving
 #. Further Testing
